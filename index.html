@@ -3,201 +3,338 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cổng lưu trữ mail cam kết</title>
+<title>Kho Mail Cam Kết</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  :root{
+    --bg:#f3f5f9; --card:#fff; --line:#e3e8ef; --text:#0f172a; --muted:#64748b;
+    --pri:#1d4ed8; --pri-soft:#eef3ff; --acc:#f26f21;
+    --ok:#15803d; --ok-soft:#e8f6ec; --warn:#b45309; --warn-soft:#fff4e0; --bad:#b91c1c; --bad-soft:#fdecec;
+    --r:14px;
+  }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:linear-gradient(135deg,#f1f5f9,#e2e8f0);min-height:100vh;padding:28px 14px;color:#1e293b}
-  .card{max-width:650px;margin:0 auto;background:#fff;border-radius:24px;padding:36px 26px 22px;box-shadow:0 10px 40px rgba(15,23,42,.08)}
-  .head{text-align:center;margin-bottom:22px}
-  .head .ico{font-size:44px;line-height:1}
-  .head h1{color:#2563eb;font-size:24px;margin:10px 0 8px}
-  .head p{color:#475569;font-size:14px;line-height:1.5;max-width:340px;margin:0 auto}
-  .box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:16px}
-  .box h3{font-size:15px;margin-bottom:12px}
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .item{background:#fff;border-left:4px solid #2563eb;border-radius:8px;padding:9px 12px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
-  .item b{color:#2563eb;font-size:13px;display:block;margin-bottom:3px}
-  .item span{font-size:12.5px;color:#334155;line-height:1.4}
-  .btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:0;border-radius:10px;padding:14px;font-size:15px;font-weight:700;color:#fff;cursor:pointer;margin-top:12px;box-shadow:0 4px 10px rgba(0,0,0,.08)}
-  .btn:disabled{opacity:.6;cursor:wait}
-  .blue{background:#2563eb}.green{background:#16a34a}.gray{background:#e2e8f0;color:#334155;box-shadow:none}
-  .foot{border-top:1px solid #e2e8f0;margin-top:22px;padding-top:14px;text-align:center;font-size:12px;color:#94a3b8}
+  body{font-family:"Be Vietnam Pro",-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.45;min-height:100vh}
+  button,input,textarea{font-family:inherit;font-size:inherit;color:inherit}
   .hidden{display:none!important}
-  label{display:block;font-size:13.5px;font-weight:600;margin:14px 0 6px}
-  label i{color:#dc2626;font-style:normal}
-  input[type=text],input[type=date],input[type=password]{width:100%;padding:11px 12px;border:1px solid #cbd5e1;border-radius:9px;font-size:15px;outline:none}
-  input:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.15)}
-  .hint{font-size:12px;color:#64748b;margin-top:4px}
-  .warn{font-size:12.5px;color:#b45309;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:7px 10px;margin-top:6px}
-  .drop{border:2px dashed #93c5fd;background:#eff6ff;border-radius:12px;padding:20px;text-align:center;cursor:pointer;font-size:13.5px;color:#1e40af}
-  .drop.over{background:#dbeafe}
-  .files{margin-top:8px}
-  .file{display:flex;justify-content:space-between;align-items:center;font-size:13px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:7px 10px;margin-top:6px}
-  .file button{border:0;background:none;color:#dc2626;font-size:16px;cursor:pointer}
-  .msg{margin-top:12px;padding:10px 12px;border-radius:9px;font-size:13.5px}
-  .ok{background:#dcfce7;color:#166534}.err{background:#fee2e2;color:#991b1b}.info{background:#e0f2fe;color:#075985}
-  .row{display:flex;gap:8px}
-  .row input{flex:1}
-  .row .btn{width:auto;margin:0;padding:0 18px}
-  .res{margin-top:14px}
-  .r{border:1px solid #e2e8f0;border-left:4px solid #16a34a;border-radius:10px;padding:10px 12px;margin-top:8px;font-size:13px}
-  .r .t{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
-  .r .t b{color:#1d4ed8;font-size:14.5px}
-  .r .t small{color:#64748b}
-  .r div{margin-top:3px;color:#334155}
-  .r a{color:#16a34a;font-weight:600;word-break:break-all;text-decoration:none}
-  .back{background:none;border:0;color:#2563eb;font-weight:600;cursor:pointer;font-size:14px;margin-bottom:6px}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 18px}
+
+  /* Thanh trên */
+  .top{background:#0b1f3f;color:#fff}
+  .top .wrap{display:flex;align-items:center;gap:14px;height:64px}
+  .logo{width:38px;height:38px;border-radius:10px;background:var(--acc);display:grid;place-items:center;font-size:19px}
+  .brand b{display:block;font-size:16.5px;letter-spacing:.2px}
+  .brand small{color:#9fb3d1;font-size:12px}
+  .top .sp{flex:1}
+  .ghost{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#dbe6f7;border-radius:9px;padding:7px 12px;cursor:pointer;font-size:12.5px}
+  .ghost:hover{background:rgba(255,255,255,.16)}
+
+  /* Thống kê */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:-1px 0 18px;padding-top:20px}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;cursor:pointer;text-align:left;transition:.15s;position:relative;overflow:hidden}
+  .stat:hover{border-color:#c7d2e3;transform:translateY(-1px)}
+  .stat::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--c,var(--pri))}
+  .stat .l{color:var(--muted);font-size:12.5px;font-weight:500}
+  .stat .v{font-size:26px;font-weight:700;margin-top:2px;color:var(--c,var(--text))}
+  .stat .s{font-size:11.5px;color:var(--muted)}
+  .stat.ok{--c:var(--ok)} .stat.warn{--c:var(--warn)} .stat.bad{--c:var(--bad)}
+
+  /* Tabs */
+  .tabs{display:flex;gap:4px;background:#e6ebf2;border-radius:12px;padding:4px;width:max-content;margin-bottom:16px}
+  .tab{border:0;background:none;padding:9px 18px;border-radius:9px;font-weight:600;color:#475569;cursor:pointer}
+  .tab.on{background:#fff;color:var(--pri);box-shadow:0 1px 3px rgba(15,23,42,.1)}
+
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+  .panel h2{font-size:16px;margin-bottom:4px}
+  .panel .sub{color:var(--muted);font-size:13px;margin-bottom:14px}
+
+  /* Form */
+  .upgrid{display:grid;grid-template-columns:1.35fr 1fr;gap:16px;align-items:start}
+  .f{margin-bottom:14px}
+  .f label{display:block;font-weight:600;font-size:13px;margin-bottom:6px}
+  .f label i{color:var(--bad);font-style:normal}
+  .f .h{color:var(--muted);font-size:12px;margin-top:5px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  input[type=text],input[type=date],input[type=password],textarea{width:100%;border:1px solid #cfd8e3;border-radius:10px;padding:10px 12px;outline:none;background:#fff;transition:.15s}
+  textarea{resize:vertical;min-height:64px}
+  input:focus,textarea:focus{border-color:var(--pri);box-shadow:0 0 0 3px rgba(29,78,216,.14)}
   .seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .seg button{border:2px solid #cbd5e1;background:#fff;border-radius:10px;padding:11px 8px;font-size:14px;font-weight:700;color:#475569;cursor:pointer}
-  .seg button small{display:block;font-weight:400;font-size:11.5px;margin-top:2px}
-  .seg button.on{border-color:#2563eb;background:#eff6ff;color:#1d4ed8}
-  .seg.f button{padding:8px;font-size:13px}
-  textarea{width:100%;padding:11px 12px;border:1px solid #cbd5e1;border-radius:9px;font-size:15px;outline:none;resize:vertical;min-height:70px;font-family:inherit}
-  textarea:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.15)}
-  .preview{font-size:12.5px;background:#f1f5f9;border-radius:8px;padding:8px 10px;margin-top:14px;color:#334155;word-break:break-all}
-  .badge{display:inline-block;font-size:11px;font-weight:700;border-radius:20px;padding:2px 8px;margin-left:6px;vertical-align:middle}
-  .b-ld{background:#dbeafe;color:#1d4ed8}.b-ss{background:#fef3c7;color:#92400e}
-  .r.ss{border-left-color:#f59e0b}
-  @media(max-width:520px){.grid{grid-template-columns:1fr}.card{padding:26px 16px 18px}}
+  .seg button{border:1.5px solid #cfd8e3;background:#fff;border-radius:11px;padding:10px 12px;cursor:pointer;text-align:left;font-weight:600}
+  .seg button small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+  .seg button.on{border-color:var(--pri);background:var(--pri-soft);color:var(--pri)}
+  .drop{border:1.5px dashed #9db4e8;background:#f7f9ff;border-radius:12px;padding:18px;text-align:center;cursor:pointer;color:#1e3a8a;transition:.15s}
+  .drop.over{background:#e7eeff;border-color:var(--pri)}
+  .drop small{color:var(--muted)}
+  .file{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#f8fafc;border:1px solid var(--line);border-radius:9px;padding:7px 10px;margin-top:6px;font-size:13px}
+  .file span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .file button{border:0;background:none;color:var(--bad);cursor:pointer;font-size:15px}
+  .warn{background:var(--warn-soft);color:#8a4b06;border:1px solid #fbd9a5;border-radius:9px;padding:7px 10px;font-size:12.5px;margin-top:6px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:10px;padding:12px 18px;font-weight:700;cursor:pointer;background:var(--pri);color:#fff;transition:.15s}
+  .btn:hover{filter:brightness(1.08)} .btn:disabled{opacity:.6;cursor:wait}
+  .btn.full{width:100%}
+  .msg{margin-top:12px;padding:10px 12px;border-radius:10px;font-size:13px}
+  .m-ok{background:var(--ok-soft);color:#14532d}.m-err{background:var(--bad-soft);color:#7f1d1d}.m-info{background:var(--pri-soft);color:#1e3a8a}
+
+  /* Xem trước */
+  .pv{position:sticky;top:14px}
+  .pv .box{background:linear-gradient(160deg,#0b1f3f,#16356a);color:#fff;border-radius:var(--r);padding:18px}
+  .pv .k{color:#9fb3d1;font-size:12px;margin-top:12px}
+  .pv .k:first-child{margin-top:0}
+  .pv .fn{font-weight:600;word-break:break-all;font-size:13.5px;margin-top:3px}
+  .pv .dates{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+  .pv .d{background:rgba(255,255,255,.08);border-radius:10px;padding:10px}
+  .pv .d b{display:block;font-size:17px;margin-top:2px}
+  .pv .d.han b{color:#ffb27a}
+  .pv .left{margin-top:12px;font-size:12.5px;color:#cfdcf0}
+  .guide{margin-top:12px;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+  .guide h4{font-size:13px;margin-bottom:8px}
+  .guide li{margin:0 0 6px 18px;color:#334155;font-size:12.5px}
+
+  /* Tra cứu */
+  .bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+  .bar .q{flex:1;min-width:220px}
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{border:1px solid #cfd8e3;background:#fff;border-radius:20px;padding:6px 12px;cursor:pointer;font-size:12.5px;font-weight:500;color:#334155}
+  .chip.on{background:var(--text);border-color:var(--text);color:#fff}
+  .filters{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:12px}
+  .filters .lb{color:var(--muted);font-size:12px;margin-right:2px;align-self:center}
+  .info{color:var(--muted);font-size:12.5px;margin-bottom:8px}
+  table{width:100%;border-collapse:collapse}
+  th{text-align:left;font-size:12px;color:var(--muted);font-weight:600;padding:9px 10px;border-bottom:1px solid var(--line);background:#f8fafc;white-space:nowrap}
+  td{padding:11px 10px;border-bottom:1px solid #eef1f5;vertical-align:top}
+  tr:hover td{background:#fafbfd}
+  .hd{font-weight:700;color:var(--pri)}
+  .ss{font-size:12px;color:var(--muted);margin-top:2px}
+  .tag{display:inline-block;font-size:11px;font-weight:600;border-radius:20px;padding:2px 9px;white-space:nowrap}
+  .t-ld{background:#e8efff;color:#1e40af}.t-ss{background:#f3e8ff;color:#6b21a8}
+  .t-CON{background:var(--ok-soft);color:var(--ok)}.t-SAP{background:var(--warn-soft);color:var(--warn)}.t-HET{background:var(--bad-soft);color:var(--bad)}
+  .bar2{height:5px;background:#eef1f5;border-radius:4px;margin-top:5px;overflow:hidden;width:110px}
+  .bar2 i{display:block;height:100%;border-radius:4px}
+  .fl a{color:var(--pri);text-decoration:none;font-weight:600;font-size:12.5px}
+  .fl a:hover{text-decoration:underline}
+  .empty{text-align:center;color:var(--muted);padding:30px 0}
+
+  .soon{margin-bottom:18px}
+  .soon h3{font-size:14px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+  .soon .it{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px solid #eef1f5;font-size:13px}
+  .soon .it:first-of-type{border-top:0}
+
+  /* Đăng nhập */
+  .gate{max-width:380px;margin:12vh auto 0;background:#fff;border:1px solid var(--line);border-radius:18px;padding:30px;text-align:center}
+  .gate .logo{margin:0 auto 12px;width:52px;height:52px;font-size:26px}
+  .gate h1{font-size:19px}.gate p{color:var(--muted);margin:4px 0 16px;font-size:13px}
+
+  .foot{text-align:center;color:#94a3b8;font-size:12px;padding:24px 0}
+
+  @media(max-width:860px){
+    .stats{grid-template-columns:1fr 1fr}
+    .upgrid{grid-template-columns:1fr}
+    .pv{position:static}
+    thead{display:none}
+    table,tbody,tr,td{display:block;width:100%}
+    tr{border:1px solid var(--line);border-radius:12px;margin-bottom:10px;padding:6px 4px}
+    td{border:0;padding:5px 10px}
+    td[data-l]::before{content:attr(data-l);display:block;font-size:11px;color:var(--muted)}
+  }
+  @media(max-width:520px){.two{grid-template-columns:1fr}.brand small{display:none}}
 </style>
 </head>
 <body>
-<div class="card">
 
-  <!-- MÃ TRUY CẬP -->
-  <div id="vGate" class="hidden">
-    <div class="head"><div class="ico">🔒</div><h1>Cổng lưu trữ mail cam kết</h1><p>Nhập mã truy cập để tiếp tục.</p></div>
+<!-- ĐĂNG NHẬP -->
+<div id="vGate" class="hidden">
+  <div class="gate">
+    <div class="logo">📨</div>
+    <h1>Kho Mail Cam Kết</h1>
+    <p>Nhập mã truy cập để tiếp tục</p>
     <input type="password" id="gCode" placeholder="Mã truy cập">
-    <button class="btn blue" id="gBtn">Vào cổng</button>
+    <button class="btn full" id="gBtn" style="margin-top:10px">Vào hệ thống</button>
     <div id="gMsg"></div>
   </div>
+</div>
 
-  <!-- TRANG CHỦ -->
-  <div id="vHome" class="hidden">
-    <div class="head">
-      <div class="ico">📨</div>
-      <h1>Cổng lưu trữ mail cam kết</h1>
-      <p>Tiếp nhận, lưu trữ và tra cứu mail cam kết của khách hàng dùng chung các khu vực.</p>
+<!-- ỨNG DỤNG -->
+<div id="vApp" class="hidden">
+  <div class="top"><div class="wrap">
+    <div class="logo">📨</div>
+    <div class="brand"><b>Kho Mail Cam Kết</b><small>Lưu trữ dùng chung · Hạn cam kết 6 tháng</small></div>
+    <div class="sp"></div>
+    <button class="ghost" id="btnOut">Thoát</button>
+  </div></div>
+
+  <div class="wrap">
+    <div class="stats">
+      <button class="stat" data-st=""><div class="l">Tổng mail cam kết</div><div class="v" id="sTotal">–</div><div class="s" id="sLoai">&nbsp;</div></button>
+      <button class="stat ok" data-st="CON"><div class="l">Còn hạn</div><div class="v" id="sCON">–</div><div class="s">Còn trên 30 ngày</div></button>
+      <button class="stat warn" data-st="SAP"><div class="l">Sắp hết hạn</div><div class="v" id="sSAP">–</div><div class="s">Còn ≤ 30 ngày</div></button>
+      <button class="stat bad" data-st="HET"><div class="l">Hết hạn</div><div class="v" id="sHET">–</div><div class="s">Quá 6 tháng</div></button>
     </div>
-    <div class="box">
-      <h3>Quy định khi úp mail cam kết</h3>
-      <div class="grid">
-        <div class="item"><b>Số HĐ</b><span>Lấy ở mục Thông tin hợp đồng. VD: DNABC7957.</span></div>
-        <div class="item"><b>Sale</b><span>Account mail của Sale trên phiếu thi công. VD: ThaoTTT40.</span></div>
-        <div class="item"><b>Ngày cam kết</b><span>Theo Ngày tạo phiếu thi công. VD: 02/07/2026.</span></div>
-        <div class="item"><b>SHĐ song song</b><span>Các HĐ đã sử dụng trước đó (trong tiêu đề mail Xin CF).</span></div>
-        <div class="item"><b>File mail</b><span>Kéo mail CF đã duyệt từ Outlook ra Desktop (.msg) hoặc In ra PDF.</span></div>
-        <div class="item"><b>Tên file tự đặt</b><span>Số HĐ - Sale - Ngày cam kết_các HĐ song song.</span></div>
+
+    <div class="tabs">
+      <button class="tab on" data-tab="tUp">📝 Úp mail cam kết</button>
+      <button class="tab" data-tab="tSearch">🔎 Tra cứu</button>
+    </div>
+
+    <!-- TAB ÚP MAIL -->
+    <div id="tUp">
+      <div class="upgrid">
+        <div class="panel">
+          <h2>Úp mail cam kết</h2>
+          <div class="sub">Hạn cam kết tự tính = Ngày cam kết + 6 tháng.</div>
+
+          <div class="f">
+            <label>Loại cam kết <i>*</i></label>
+            <div class="seg" id="segLoai">
+              <button type="button" data-v="LAU_DAI" class="on">📌 Cam kết lâu dài<small>1 Số HĐ</small></button>
+              <button type="button" data-v="SONG_SONG">🔗 Cam kết song song<small>Kèm các HĐ đã sử dụng trước đó</small></button>
+            </div>
+          </div>
+
+          <div class="two">
+            <div class="f">
+              <label>Số HĐ <i>*</i></label>
+              <input type="text" id="fHD" placeholder="VD: DNABC7957" autocomplete="off">
+              <div id="hdWarn"></div>
+            </div>
+            <div class="f">
+              <label>Sale <i>*</i></label>
+              <input type="text" id="fSale" list="saleList" placeholder="VD: ThaoTTT40" autocomplete="off">
+              <datalist id="saleList"></datalist>
+            </div>
+          </div>
+
+          <div class="f">
+            <label>Ngày cam kết <i>*</i></label>
+            <input type="date" id="fNgay">
+            <div class="h">Theo Ngày tạo phiếu thi công.</div>
+          </div>
+
+          <div class="f hidden" id="ssBox">
+            <label>Các SHĐ song song đã sử dụng trước đó <i>*</i></label>
+            <textarea id="fSS" placeholder="VD: DNABF9263 (nhiều HĐ cách nhau dấu phẩy, dấu cách hoặc xuống dòng)"></textarea>
+            <div class="h" id="ssCount"></div>
+            <div id="ssWarn"></div>
+          </div>
+
+          <div class="f">
+            <label>Mail cam kết <i>*</i></label>
+            <div class="drop" id="drop">📎 Bấm để chọn hoặc kéo thả file vào đây<br><small>.msg · .eml · .pdf · ảnh — tối đa 20MB/file, 10 file</small></div>
+            <input type="file" id="fFile" multiple accept=".msg,.eml,.pdf,image/*" class="hidden">
+            <div id="fileList"></div>
+          </div>
+
+          <button class="btn full" id="upBtn">⬆️ Úp lên kho</button>
+          <div id="upMsg"></div>
+        </div>
+
+        <div class="pv">
+          <div class="box">
+            <div class="k">Tên file khi lưu</div>
+            <div class="fn" id="pvName">–</div>
+            <div class="dates">
+              <div class="d"><span class="k">Ngày cam kết</span><b id="pvNgay">–</b></div>
+              <div class="d han"><span class="k">Hạn cam kết</span><b id="pvHan">–</b></div>
+            </div>
+            <div class="left" id="pvLeft"></div>
+          </div>
+          <div class="guide">
+            <h4>📍 Lấy thông tin ở đâu?</h4>
+            <ul>
+              <li><b>Số HĐ:</b> mục Thông tin hợp đồng.</li>
+              <li><b>Sale:</b> account mail Sale trên phiếu thi công (dán cả email cũng được).</li>
+              <li><b>Ngày cam kết:</b> Ngày tạo phiếu thi công.</li>
+              <li><b>SHĐ song song:</b> các HĐ trong tiêu đề mail “Xin CF”.</li>
+              <li><b>File mail:</b> kéo mail CF đã duyệt từ Outlook ra Desktop (.msg) hoặc In ra PDF.</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
-    <button class="btn blue" onclick="show('vUp')">📝 Úp mail cam kết</button>
-    <button class="btn green" onclick="show('vSearch');doSearch()">🗂️ Tra cứu mail đã úp</button>
+
+    <!-- TAB TRA CỨU -->
+    <div id="tSearch" class="hidden">
+      <div class="panel soon hidden" id="soonBox">
+        <h3>⏰ Sắp hết hạn gần nhất <span class="tag t-SAP" id="soonCount"></span></h3>
+        <div id="soonList"></div>
+      </div>
+
+      <div class="panel">
+        <div class="bar">
+          <input type="text" class="q" id="sQ" placeholder="Tìm theo Số HĐ, SHĐ song song hoặc Sale…">
+          <button class="btn" id="sBtn">Tìm</button>
+        </div>
+        <div class="filters">
+          <div class="chips" id="cLoai"><span class="lb">Loại:</span>
+            <button class="chip on" data-v="">Tất cả</button><button class="chip" data-v="LAU_DAI">Lâu dài</button><button class="chip" data-v="SONG_SONG">Song song</button>
+          </div>
+          <div class="chips" id="cSt"><span class="lb">Hạn:</span>
+            <button class="chip on" data-v="">Tất cả</button><button class="chip" data-v="CON">Còn hạn</button><button class="chip" data-v="SAP">Sắp hết hạn</button><button class="chip" data-v="HET">Hết hạn</button>
+          </div>
+        </div>
+        <div class="info" id="sInfo"></div>
+        <table>
+          <thead><tr><th>Số HĐ</th><th>Loại</th><th>Sale</th><th>Ngày cam kết</th><th>Hạn cam kết</th><th>File mail</th></tr></thead>
+          <tbody id="sRes"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="foot">Kho Mail Cam Kết · Dữ liệu lưu trữ tập trung trên Google Drive</div>
   </div>
-
-  <!-- UPLOAD -->
-  <div id="vUp" class="hidden">
-    <button class="back" onclick="show('vHome')">← Trang chủ</button>
-    <div class="head"><div class="ico">📝</div><h1>Úp mail cam kết</h1></div>
-
-    <label>Loại cam kết <i>*</i></label>
-    <div class="seg" id="segLoai">
-      <button type="button" data-v="LAU_DAI" class="on">📌 Cam kết lâu dài<small>1 Số HĐ</small></button>
-      <button type="button" data-v="SONG_SONG">🔗 Cam kết song song<small>Kèm các HĐ song song</small></button>
-    </div>
-
-    <label>Số HĐ <i>*</i></label>
-    <input type="text" id="fHD" placeholder="VD: DNABC7957" autocomplete="off">
-    <div class="hint">Lấy ở mục Thông tin hợp đồng.</div>
-    <div id="hdWarn"></div>
-
-    <label>Sale <i>*</i></label>
-    <input type="text" id="fSale" list="saleList" placeholder="VD: ThaoTTT40" autocomplete="off">
-    <div class="hint">Account mail của Sale trên phiếu thi công (dán cả email cũng được, tự bỏ @fpt.com).</div>
-    <datalist id="saleList"></datalist>
-
-    <label>Ngày cam kết <i>*</i></label>
-    <input type="date" id="fNgay">
-    <div class="hint">Theo Ngày tạo phiếu thi công.</div>
-
-    <div id="ssBox" class="hidden">
-      <label>Các SHĐ song song đã sử dụng trước đó <i>*</i></label>
-      <textarea id="fSS" placeholder="VD: DNABF9263&#10;(nhiều HĐ thì cách nhau dấu phẩy, dấu cách hoặc xuống dòng)"></textarea>
-      <div class="hint" id="ssCount"></div>
-      <div id="ssWarn"></div>
-    </div>
-
-    <div class="preview" id="namePreview"></div>
-
-    <label>Mail cam kết <i>*</i></label>
-    <div class="drop" id="drop">📎 Bấm để chọn hoặc kéo thả file vào đây<br><small>.msg, .eml, .pdf, ảnh · tối đa 20MB/file · tối đa 10 file</small></div>
-    <input type="file" id="fFile" multiple accept=".msg,.eml,.pdf,image/*" class="hidden">
-    <div class="files" id="fileList"></div>
-
-    <button class="btn blue" id="upBtn">⬆️ Úp lên</button>
-    <div id="upMsg"></div>
-  </div>
-
-  <!-- TRA CỨU -->
-  <div id="vSearch" class="hidden">
-    <button class="back" onclick="show('vHome')">← Trang chủ</button>
-    <div class="head"><div class="ico">🗂️</div><h1>Tra cứu mail cam kết</h1></div>
-    <div class="seg f" id="segFilter" style="grid-template-columns:repeat(3,1fr);margin-bottom:10px">
-      <button type="button" data-v="" class="on">Tất cả</button>
-      <button type="button" data-v="LAU_DAI">Lâu dài</button>
-      <button type="button" data-v="SONG_SONG">Song song</button>
-    </div>
-    <div class="row">
-      <input type="text" id="sQ" placeholder="Số HĐ, SHĐ song song hoặc tên Sale">
-      <button class="btn green" id="sBtn">Tìm</button>
-    </div>
-    <div class="hint" id="sInfo"></div>
-    <div class="res" id="sRes"></div>
-  </div>
-
-  <div class="foot">Dữ liệu được lưu trữ tập trung trên Google Drive.</div>
 </div>
 
 <script>
-const $ = id => document.getElementById(id);
-const MAX_MB = 20, MAX_FILES = 10;
-let CODE = '';
-let files = [];
-
-/* ==== DÁN LINK WEB APP APPS SCRIPT (kết thúc bằng /exec) VÀO ĐÂY ==== */
+/* ==== LINK WEB APP APPS SCRIPT (kết thúc bằng /exec) ==== */
 const API_URL = 'https://script.google.com/macros/s/AKfycbyE5jrl7uR1BRTZwZg2oaecyInqioXAmeWw1FvABjn4UU6GHDAkSgyLnf7Z_evl6m92/exec';
+const HAN_THANG = 6, SAP_HET_NGAY = 30, MAX_MB = 20, MAX_FILES = 10;
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const msg = (el, cls, html) => { $(el).innerHTML = html ? `<div class="msg m-${cls}">${html}</div>` : ''; };
+const errText = e => esc((e && e.message) || e).replace(/^Exception:\s*/, '');
 
 async function run(action, ...args) {
   let r;
   try {
-    r = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // tránh preflight CORS
-      body: JSON.stringify({ action, args })
-    });
+    r = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action, args }) });
   } catch (e) { throw new Error('Không kết nối được máy chủ. Kiểm tra mạng hoặc API_URL.'); }
-  const j = await r.json().catch(() => ({ ok: false, error: 'Máy chủ trả về dữ liệu lỗi. Kiểm tra quyền truy cập Web App (Anyone).' }));
+  const j = await r.json().catch(() => ({ ok: false, error: 'Máy chủ trả về dữ liệu lỗi. Kiểm tra quyền truy cập Web App (Bất kỳ ai).' }));
   if (!j.ok) throw new Error(j.error);
   return j.data;
 }
-const esc = s => String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const msg = (el, cls, text) => { $(el).innerHTML = text ? `<div class="msg ${cls}">${text}</div>` : ''; };
-const errText = e => esc((e && e.message) || e).replace(/^Exception:\s*/, '');
 
-function show(v) {
-  ['vGate','vHome','vUp','vSearch'].forEach(x => $(x).classList.toggle('hidden', x !== v));
-  window.scrollTo(0, 0);
+let CODE = '', LOAI = 'LAU_DAI', F_LOAI = '', F_ST = '', files = [];
+
+/* ---------- Ngày & hạn ---------- */
+function addMonths(d, n) {
+  const r = new Date(d.getFullYear(), d.getMonth() + n, 1);
+  r.setDate(Math.min(d.getDate(), new Date(r.getFullYear(), r.getMonth() + 1, 0).getDate()));
+  return r;
 }
+const pad = n => String(n).padStart(2, '0');
+const dmy = d => `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
+const todayLocal = () => { const t = new Date(); return new Date(t.getFullYear(), t.getMonth(), t.getDate()); };
+const stLabel = (st, days) => st === 'HET' ? `Hết hạn ${-days} ngày` : st === 'SAP' ? `Còn ${days} ngày` : st === 'CON' ? `Còn ${days} ngày` : '';
+const stColor = st => st === 'HET' ? 'var(--bad)' : st === 'SAP' ? 'var(--warn)' : 'var(--ok)';
+const pct = days => Math.max(0, Math.min(100, (days / 183) * 100));
 
-/* ---------- Khởi động ---------- */
+/* ---------- Khởi động & đăng nhập ---------- */
+function showApp() { $('vGate').classList.add('hidden'); $('vApp').classList.remove('hidden'); loadStats(); loadSales(); }
+function showGate() { $('vApp').classList.add('hidden'); $('vGate').classList.remove('hidden'); $('gCode').focus(); }
+
 (async function init() {
   try { CODE = sessionStorage.getItem('mck_code') || ''; } catch (e) {}
-  $('fNgay').value = new Date(Date.now() + 7 * 3600e3).toISOString().slice(0, 10);
+  const t = todayLocal();
+  $('fNgay').value = `${t.getFullYear()}-${pad(t.getMonth() + 1)}-${pad(t.getDate())}`;
+  updatePreview();
   try {
-    const need = await run('needCode');
-    if (need && !CODE) return show('vGate');
-    if (need) { try { await run('verifyCode', CODE); } catch (e) { CODE = ''; return show('vGate'); } }
-    show('vHome'); loadSales();
-  } catch (e) { show('vHome'); }
+    if (await run('needCode')) {
+      if (!CODE) return showGate();
+      try { await run('verifyCode', CODE); } catch (e) { CODE = ''; return showGate(); }
+    }
+    showApp();
+  } catch (e) { showGate(); msg('gMsg', 'err', errText(e)); }
 })();
 
 $('gBtn').onclick = async () => {
@@ -207,83 +344,100 @@ $('gBtn').onclick = async () => {
   try {
     await run('verifyCode', c);
     CODE = c; try { sessionStorage.setItem('mck_code', c); } catch (e) {}
-    show('vHome'); loadSales();
+    msg('gMsg'); showApp();
   } catch (e) { msg('gMsg', 'err', errText(e)); }
   $('gBtn').disabled = false;
 };
 $('gCode').addEventListener('keydown', e => { if (e.key === 'Enter') $('gBtn').click(); });
+$('btnOut').onclick = () => { CODE = ''; try { sessionStorage.removeItem('mck_code'); } catch (e) {} $('gCode').value = ''; showGate(); };
 
-async function loadSales() {
+/* ---------- Thống kê ---------- */
+async function loadStats() {
   try {
-    const list = await run('getSales', CODE);
-    $('saleList').innerHTML = list.map(s => `<option value="${esc(s)}">`).join('');
+    const s = await run('getStats', CODE);
+    $('sTotal').textContent = s.total; $('sCON').textContent = s.CON; $('sSAP').textContent = s.SAP; $('sHET').textContent = s.HET;
+    $('sLoai').textContent = `${s.LAU_DAI} lâu dài · ${s.SONG_SONG} song song`;
+    $('soonBox').classList.toggle('hidden', !s.sapHet.length);
+    $('soonCount').textContent = s.SAP + ' HĐ';
+    $('soonList').innerHTML = s.sapHet.map(x => `
+      <div class="it"><span><b class="hd">${esc(x.hd)}</b> · ${esc(x.sale)} · hạn ${esc(x.han)}</span>
+      <span class="tag t-SAP">Còn ${x.daysLeft} ngày</span></div>`).join('');
   } catch (e) {}
 }
+document.querySelectorAll('.stat').forEach(b => b.onclick = () => {
+  F_ST = b.dataset.st;
+  document.querySelectorAll('#cSt .chip').forEach(c => c.classList.toggle('on', c.dataset.v === F_ST));
+  openTab('tSearch'); doSearch();
+});
 
-/* ---------- Loại cam kết ---------- */
-let LOAI = 'LAU_DAI', FILTER = '';
-function segInit(id, onPick) {
-  $(id).querySelectorAll('button').forEach(b => b.onclick = () => {
-    $(id).querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
-    onPick(b.dataset.v);
-  });
+async function loadSales() {
+  try { $('saleList').innerHTML = (await run('getSales', CODE)).map(s => `<option value="${esc(s)}">`).join(''); } catch (e) {}
 }
-segInit('segLoai', v => { LOAI = v; $('ssBox').classList.toggle('hidden', v !== 'SONG_SONG'); updatePreview(); });
-segInit('segFilter', v => { FILTER = v; doSearch(); });
 
-/* ---------- Chuẩn hoá Số HĐ + xem trước tên file ---------- */
+/* ---------- Tabs ---------- */
+function openTab(id) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.dataset.tab === id));
+  ['tUp', 'tSearch'].forEach(x => $(x).classList.toggle('hidden', x !== id));
+}
+document.querySelectorAll('.tab').forEach(t => t.onclick = () => { openTab(t.dataset.tab); if (t.dataset.tab === 'tSearch') doSearch(); });
+
+/* ---------- Form úp ---------- */
+document.querySelectorAll('#segLoai button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('#segLoai button').forEach(x => x.classList.toggle('on', x === b));
+  LOAI = b.dataset.v; $('ssBox').classList.toggle('hidden', LOAI !== 'SONG_SONG'); updatePreview();
+});
+
 const normHD = s => String(s || '').toUpperCase().replace(/\s+/g, '');
+const safe = s => String(s || '').replace(/[\\/:*?"<>|]+/g, '_').replace(/\s+/g, ' ').trim();
+const normSale = s => safe(String(s || '').replace(/@.*$/, '').replace(/\s+/g, ''));
 const ssList = () => {
   const main = normHD($('fHD').value);
   return [...new Set($('fSS').value.toUpperCase().split(/[,;\s]+/).map(normHD).filter(Boolean))].filter(x => x !== main);
 };
-const safe = s => String(s || '').replace(/[\\/:*?"<>|]+/g, '_').replace(/\s+/g, ' ').trim();
-const normSale = s => safe(String(s || '').replace(/@.*$/, '').replace(/\s+/g, ''));
 
 function updatePreview() {
   const hd = normHD($('fHD').value) || 'SốHĐ';
   const sale = normSale($('fSale').value) || 'Sale';
-  const d = $('fNgay').value ? $('fNgay').value.split('-').reverse().join('-') : 'dd-mm-yyyy';
   const ss = LOAI === 'SONG_SONG' ? ssList() : [];
-  $('namePreview').innerHTML = `🏷️ Tên file khi lưu: <b>${esc(hd + ' - ' + sale + ' - ' + d + (ss.length ? '_' + ss.join('_') : ''))}</b>`;
+  const v = $('fNgay').value;
+  let ngayStr = 'dd-mm-yyyy';
+  if (v) {
+    const [y, m, d] = v.split('-').map(Number);
+    const ngay = new Date(y, m - 1, d), han = addMonths(ngay, HAN_THANG);
+    const days = Math.round((han - todayLocal()) / 864e5);
+    const st = days < 0 ? 'HET' : days <= SAP_HET_NGAY ? 'SAP' : 'CON';
+    ngayStr = `${pad(d)}-${pad(m)}-${y}`;
+    $('pvNgay').textContent = dmy(ngay); $('pvHan').textContent = dmy(han);
+    $('pvLeft').innerHTML = `<span class="tag t-${st}">${stLabel(st, days)}</span>`;
+  } else { $('pvNgay').textContent = '–'; $('pvHan').textContent = '–'; $('pvLeft').innerHTML = ''; }
+  $('pvName').textContent = `${hd} - ${sale} - ${ngayStr}${ss.length ? '_' + ss.join('_') : ''}`;
   $('ssCount').textContent = ss.length ? `${ss.length} HĐ song song: ${ss.join(', ')}` : '';
 }
 $('fHD').addEventListener('input', e => { e.target.value = normHD(e.target.value); updatePreview(); });
 ['fSale', 'fNgay', 'fSS'].forEach(id => $(id).addEventListener('input', updatePreview));
 
-/* ---------- Cảnh báo HĐ đã có trong kho ---------- */
-const warnHtml = list => list.map(r =>
-  `⚠️ <b>${esc(r.hd)}</b> đã có ${r.count} file (${esc(r.lastLoai)}, up gần nhất ${esc(r.lastTime)})`).join('<br>');
+const warnHtml = list => list.map(r => `⚠️ <b>${esc(r.hd)}</b> đã có ${r.count} file (${esc(r.lastLoai)}, up gần nhất ${esc(r.lastTime)})`).join('<br>');
 $('fHD').addEventListener('blur', async () => {
-  const hd = $('fHD').value.trim();
   $('hdWarn').innerHTML = '';
-  if (!hd) return;
-  try {
-    const r = await run('checkHDs', CODE, hd);
-    if (r.length) $('hdWarn').innerHTML = `<div class="warn">${warnHtml(r)}. Vẫn có thể up thêm nếu là cam kết mới.</div>`;
-  } catch (e) {}
+  const hd = $('fHD').value.trim(); if (!hd) return;
+  try { const r = await run('checkHDs', CODE, hd); if (r.length) $('hdWarn').innerHTML = `<div class="warn">${warnHtml(r)}</div>`; } catch (e) {}
 });
 $('fSS').addEventListener('blur', async () => {
-  const list = ssList();
   $('ssWarn').innerHTML = '';
-  if (!list.length) return;
-  try {
-    const r = await run('checkHDs', CODE, list.join(','));
-    if (r.length) $('ssWarn').innerHTML = `<div class="warn">${warnHtml(r)}.</div>`;
-  } catch (e) {}
+  const l = ssList(); if (!l.length) return;
+  try { const r = await run('checkHDs', CODE, l.join(',')); if (r.length) $('ssWarn').innerHTML = `<div class="warn">${warnHtml(r)}</div>`; } catch (e) {}
 });
 
-/* ---------- Chọn file ---------- */
+/* File */
 const drop = $('drop');
 drop.onclick = () => $('fFile').click();
 $('fFile').onchange = e => { addFiles(e.target.files); e.target.value = ''; };
-['dragenter','dragover'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.add('over'); }));
-['dragleave','drop'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.remove('over'); }));
+['dragenter', 'dragover'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.add('over'); }));
+['dragleave', 'drop'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.remove('over'); }));
 drop.addEventListener('drop', e => addFiles(e.dataTransfer.files));
-
 function addFiles(list) {
   for (const f of list) {
-    if (files.length >= MAX_FILES) { msg('upMsg', 'err', `Tối đa ${MAX_FILES} file mỗi lần up.`); break; }
+    if (files.length >= MAX_FILES) { msg('upMsg', 'err', `Tối đa ${MAX_FILES} file mỗi lần úp.`); break; }
     if (f.size > MAX_MB * 1048576) { msg('upMsg', 'err', `File "${esc(f.name)}" vượt quá ${MAX_MB}MB.`); continue; }
     if (!files.some(x => x.name === f.name && x.size === f.size)) files.push(f);
   }
@@ -291,16 +445,10 @@ function addFiles(list) {
 }
 function renderFiles() {
   $('fileList').innerHTML = files.map((f, i) =>
-    `<div class="file"><span>📄 ${esc(f.name)} <small style="color:#64748b">(${(f.size/1048576).toFixed(2)}MB)</small></span><button onclick="files.splice(${i},1);renderFiles()">✕</button></div>`).join('');
+    `<div class="file"><span>📄 ${esc(f.name)} <small style="color:var(--muted)">${(f.size / 1048576).toFixed(2)}MB</small></span><button onclick="files.splice(${i},1);renderFiles()">✕</button></div>`).join('');
 }
-const toB64 = f => new Promise((res, rej) => {
-  const r = new FileReader();
-  r.onload = () => res(String(r.result).split(',')[1] || '');
-  r.onerror = rej;
-  r.readAsDataURL(f);
-});
+const toB64 = f => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(',')[1] || ''); r.onerror = rej; r.readAsDataURL(f); });
 
-/* ---------- Úp lên ---------- */
 $('upBtn').onclick = async () => {
   const ss = LOAI === 'SONG_SONG' ? ssList() : [];
   const meta = { loai: LOAI, soHD: $('fHD').value.trim(), sale: normSale($('fSale').value), ngayCK: $('fNgay').value, songSong: ss.join(', ') };
@@ -312,30 +460,34 @@ $('upBtn').onclick = async () => {
   if (!files.length) return msg('upMsg', 'err', 'Chưa chọn file mail cam kết.');
 
   $('upBtn').disabled = true;
-  let done = 0;
-  const total = files.length;
-  const names = [];
+  const total = files.length, names = [];
+  let done = 0, han = '';
   try {
     for (let i = 0; i < total; i++) {
-      const f = files[i];
-      msg('upMsg', 'info', `⏳ Đang up file ${i + 1}/${total}: ${esc(f.name)}…`);
-      const b64 = await toB64(f);
-      const r = await run('uploadFile', CODE, Object.assign({ index: i, total }, meta), { name: f.name, mime: f.type, b64 });
-      names.push(r.name);
-      done++;
+      msg('upMsg', 'info', `⏳ Đang úp file ${i + 1}/${total}: ${esc(files[i].name)}…`);
+      const r = await run('uploadFile', CODE, Object.assign({ index: i, total }, meta), { name: files[i].name, mime: files[i].type, b64: await toB64(files[i]) });
+      names.push(r.name); han = r.han; done++;
     }
-    msg('upMsg', 'ok', `✅ Đã up ${done} file:<br>${names.map(n => '• ' + esc(n)).join('<br>')}`);
+    msg('upMsg', 'ok', `✅ Đã úp ${done} file · Hạn cam kết đến <b>${esc(han)}</b><br>${names.map(n => '• ' + esc(n)).join('<br>')}`);
     files = []; renderFiles();
     $('fHD').value = ''; $('fSS').value = ''; $('hdWarn').innerHTML = ''; $('ssWarn').innerHTML = '';
-    updatePreview(); loadSales();
+    updatePreview(); loadSales(); loadStats();
   } catch (e) {
     files = files.slice(done); renderFiles();
-    msg('upMsg', 'err', `❌ ${errText(e)}${done ? `<br>Đã up thành công ${done} file, các file còn lại vẫn ở danh sách để up lại.` : ''}`);
+    msg('upMsg', 'err', `❌ ${errText(e)}${done ? `<br>Đã úp thành công ${done} file, các file còn lại vẫn trong danh sách để úp lại.` : ''}`);
   }
   $('upBtn').disabled = false;
 };
 
 /* ---------- Tra cứu ---------- */
+function chipGroup(id, set) {
+  document.querySelectorAll(`#${id} .chip`).forEach(c => c.onclick = () => {
+    document.querySelectorAll(`#${id} .chip`).forEach(x => x.classList.toggle('on', x === c));
+    set(c.dataset.v); doSearch();
+  });
+}
+chipGroup('cLoai', v => F_LOAI = v);
+chipGroup('cSt', v => F_ST = v);
 $('sBtn').onclick = doSearch;
 $('sQ').addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
 
@@ -344,26 +496,29 @@ async function doSearch() {
   $('sBtn').disabled = true;
   $('sInfo').textContent = 'Đang tìm…';
   try {
-    const r = await run('search', CODE, q, FILTER);
-    $('sInfo').textContent = q
-      ? `Tìm thấy ${r.items.length} kết quả cho "${q}" (kho có ${r.total} file).`
-      : `${r.items.length} lượt up mới nhất (kho có ${r.total} file).`;
+    const r = await run('search', CODE, q, F_LOAI, F_ST);
+    const filtered = q || F_LOAI || F_ST;
+    $('sInfo').textContent = filtered
+      ? `Tìm thấy ${r.found} kết quả${r.found > r.items.length ? ` (hiển thị ${r.items.length})` : ''} · Kho có ${r.total} file`
+      : `${r.items.length} lượt úp mới nhất · Kho có ${r.total} file`;
     $('sRes').innerHTML = r.items.map(x => {
-      const isSS = x.loai.indexOf('song song') >= 0;
-      return `
-      <div class="r ${isSS ? 'ss' : ''}">
-        <div class="t"><span><b>${esc(x.hd)}</b><span class="badge ${isSS ? 'b-ss' : 'b-ld'}">${isSS ? 'Song song' : 'Lâu dài'}</span></span><small>Up lúc ${esc(x.time)}</small></div>
-        <div>📅 Ngày cam kết: <b>${esc(x.ngay)}</b> · 👤 Sale: ${esc(x.sale)}</div>
-        ${x.songSong ? `<div>🔗 SHĐ song song: ${esc(x.songSong)}</div>` : ''}
-        <div>📄 <a href="${esc(x.link)}" target="_blank" rel="noopener">${esc(x.name)}</a></div>
-      </div>`; }).join('') || '<div class="msg info">Không có kết quả.</div>';
+      const ss = x.loai.indexOf('song song') >= 0;
+      return `<tr>
+        <td data-l="Số HĐ"><div class="hd">${esc(x.hd)}</div>${x.songSong ? `<div class="ss">🔗 ${esc(x.songSong)}</div>` : ''}</td>
+        <td data-l="Loại"><span class="tag ${ss ? 't-ss' : 't-ld'}">${ss ? 'Song song' : 'Lâu dài'}</span></td>
+        <td data-l="Sale">${esc(x.sale)}</td>
+        <td data-l="Ngày cam kết">${esc(x.ngay)}<div class="ss">Úp ${esc(x.time)}</div></td>
+        <td data-l="Hạn cam kết"><b>${esc(x.han)}</b> <span class="tag t-${x.status}">${stLabel(x.status, x.daysLeft)}</span>
+          <div class="bar2"><i style="width:${pct(x.daysLeft)}%;background:${stColor(x.status)}"></i></div></td>
+        <td data-l="File mail" class="fl"><a href="${esc(x.link)}" target="_blank" rel="noopener">📄 ${esc(x.name)}</a></td>
+      </tr>`;
+    }).join('') || '<tr><td colspan="6" class="empty">Không có kết quả.</td></tr>';
   } catch (e) {
     $('sInfo').textContent = '';
-    $('sRes').innerHTML = `<div class="msg err">${errText(e)}</div>`;
+    $('sRes').innerHTML = `<tr><td colspan="6"><div class="msg m-err">${errText(e)}</div></td></tr>`;
   }
   $('sBtn').disabled = false;
 }
-updatePreview();
 </script>
 </body>
 </html>
